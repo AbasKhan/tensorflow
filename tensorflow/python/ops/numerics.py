@@ -62,7 +62,7 @@ def add_check_numerics_ops():
   # added, and an op can only be added after its inputs are added.
   for op in ops.get_default_graph().get_operations():
     for output in op.outputs:
-      if output.dtype in [dtypes.float16, dtypes.float32, dtypes.float64]:
+      if output.dtype in [dtypes.float32, dtypes.float64] and output.op._get_control_flow_context() == ops.get_default_graph()._get_control_flow_context():
         message = op.name + ":" + str(output.value_index)
         with ops.control_dependencies(check_op):
           check_op = [array_ops.check_numerics(output, message=message)]
